@@ -1,6 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+/// <summary>
+/// Author: Joseph Gravelle
+/// Project Name: Pause2
+/// File Name: PlayerConrtoller.cs
+/// Creation Date: January 10, 2014
+/// Modification Date: January ##, 2014
+/// Description: Handles all player character movement in game.
+/// </summary>
+
+
 public class PlayerController : MonoBehaviour {
 
 	//Variables
@@ -10,8 +21,10 @@ public class PlayerController : MonoBehaviour {
 	public float jumpForce;
 	public float groundCheckRadius;
 	float movementSpeed;
+	float timeScale;
 	//Booleans
 	bool grounded = true;
+	bool isPaused = false;
 	//Other
 	public Transform groundCheck;
 	public LayerMask whatIsGround;
@@ -19,16 +32,31 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		timeScale = Time.timeScale;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//If the player is on the ground and they press the Spacebar, they will jump.
-		if (grounded && Input.GetKeyDown (KeyCode.Space)) 
+		//If the player is on the ground and they press the W key, they will jump.
+		if (grounded && Input.GetKeyDown (KeyCode.W)) 
 		{
 			rigidbody2D.AddForce(new Vector2(0, jumpForce));
 		}
+		//If the player presses the Escape key
+		//If the game is not paused, pauses the game
+		if (!isPaused && Input.GetKeyDown (KeyCode.Escape)) 
+		{
+			isPaused = true;
+			Time.timeScale = 0.0f;
+		}
+		//However, if the game is paused, unpause the game.
+		else if (isPaused && Input.GetKeyDown  (KeyCode.Escape))
+		{
+			isPaused = false;
+			Time.timeScale = timeScale;
+		}
+
+
 	}
 
 	void FixedUpdate() {
