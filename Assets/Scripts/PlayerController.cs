@@ -24,15 +24,18 @@ public class PlayerController : MonoBehaviour {
 	float timeScale;
 	//Booleans
 	bool grounded = true;
-	bool isPaused = false;
+	public bool isPaused = false;
+	bool facingRight = true;
 	//Other
 	public Transform groundCheck;
 	public LayerMask whatIsGround;
-
+	Animator animator;
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 		timeScale = Time.timeScale;
+		animator = GetComponent<Animator> ();
 	}
 	
 	// Update is called once per frame
@@ -64,10 +67,27 @@ public class PlayerController : MonoBehaviour {
 
 		//Controls horizontal movement
 		movementSpeed = Input.GetAxis ("Horizontal");
+		animator.SetFloat("Speed", Mathf.Abs(movementSpeed));
 		//Checks to see if the player is currently on the ground.
 		grounded = Physics2D.OverlapCircle (groundCheck.position, groundCheckRadius, whatIsGround);
 		//Applies the velocity to the player.
 		rigidbody2D.velocity = new Vector2 (movementSpeed * maxSpeed, rigidbody2D.velocity.y);
+		if (movementSpeed > 0 && !facingRight) 
+		{
+			Flip ();
+		}
+		else if (movementSpeed < 0 && facingRight)
+		{
+			Flip ();
+		}
+	}
+
+	void Flip()
+	{
+		facingRight = !facingRight;
+		Vector3 theScale = transform.localScale;
+		theScale.x *= -1;
+		transform.localScale = theScale;
 	}
 
 }
